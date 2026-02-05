@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Aster Maker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 30%, #16213e 70%, #0f1419 100%);
+            color: #f0f4f8;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* PAGE DE CONNEXION */
+        #loginPage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(26, 11, 46, 0.6);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 25px;
+            padding: 50px 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .login-header p {
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #f0f4f8;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .login-input::placeholder {
+            color: rgba(203, 213, 225, 0.5);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #8a2be2, #d4af37);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.6);
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.95rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        .lock-icon {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5));
+        }
+
+        /* ADMIN PANEL */
+        #adminPanel {
+            display: none;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .header p {
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+
+        .logout-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 12px 24px;
+            background: rgba(239, 68, 68, 0.8);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: rgba(239, 68, 68, 1);
+            transform: translateY(-2px);
+        }
+
+        /* NAVIGATION */
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            background: rgba(26, 11, 46, 0.4);
+            padding: 10px;
+            border-radius: 15px;
+            overflow-x: auto;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 15px 30px;
+            background: transparent;
+            color: #cbd5e1;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #8a2be2, #d4af37);
+            color: white;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* CARDS */
+        .card {
+            background: rgba(26, 11, 46, 0.4);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h2 {
+            color: #d4af37;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* FORM */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #f0f4f8;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .form-group select option {
+            background: #1a0b2e;
+            color: #f0f4f8;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #8a2be2, #d4af37);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.6);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        /* EMPLOYEES LIST */
+        .employees-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .employee-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .employee-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .employee-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .employee-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #d4af37;
+        }
+
+        .employee-username {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .rating-container {
+            margin: 15px 0;
+        }
+
+        .stars {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .star {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #475569;
+            transition: all 0.2s ease;
+        }
+
+        .star.active {
+            color: #fbbf24;
+        }
+
+        .star:hover {
+            transform: scale(1.2);
+        }
+
+        .employee-notes {
+            margin-top: 15px;
+        }
+
+        .employee-notes textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        .employee-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* REQUESTS LIST */
+        .requests-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .request-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+        }
+
+        .request-card.unread {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .request-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #d4af37;
+            margin-bottom: 5px;
+        }
+
+        .request-employee {
+            font-size: 0.95rem;
+            color: #94a3b8;
+        }
+
+        .request-status {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .badge-read {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .badge-unread {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .request-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: #f0f4f8;
+            font-weight: 600;
+        }
+
+        .request-description {
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* SUCCESS MESSAGE */
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .success-message.show {
+            opacity: 1;
+        }
+
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .logout-button {
+                position: static;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .employees-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .request-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE DE CONNEXION -->
+    <div id="loginPage">
+        <div class="login-container">
+            <div class="lock-icon">👑</div>
+            <div class="login-header">
+                <h1>Admin Panel</h1>
+                <p>Espace Administrateur - Aster Maker</p>
+            </div>
+            <form class="login-form" id="loginForm">
+                <div>
+                    <input 
+                        type="password" 
+                        id="passwordInput" 
+                        class="login-input" 
+                        placeholder="Mot de passe administrateur"
+                        autocomplete="off"
+                    >
+                </div>
+                <button type="submit" class="login-button">Se connecter</button>
+                <div class="error-message" id="errorMessage">❌ Mot de passe incorrect</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- PANEL ADMIN -->
+    <div id="adminPanel">
+        <div class="container">
+            <div class="header">
+                <button class="logout-button" onclick="logout()">🚪 Déconnexion</button>
+                <h1>👑 Panel Administrateur</h1>
+                <p>Gestion des équipes et demandes - Aster Maker</p>
+            </div>
+
+            <!-- STATISTIQUES -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="statEmployees">0</div>
+                    <div class="stat-label">Employés</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statRequests">0</div>
+                    <div class="stat-label">Demandes totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statUnread">0</div>
+                    <div class="stat-label">Non lues</div>
+                </div>
+            </div>
+
+            <!-- NAVIGATION -->
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTab('employees')">👥 Équipe</button>
+                <button class="tab-button" onclick="switchTab('newRequest')">➕ Nouvelle demande</button>
+                <button class="tab-button" onclick="switchTab('requests')">📋 Demandes</button>
+            </div>
+
+            <!-- ONGLET ÉQUIPE -->
+            <div id="tab-employees" class="tab-content active">
+                <div class="card">
+                    <h2>👥 Gestion de l'équipe</h2>
+                    
+                    <div class="form-group">
+                        <label>Nom complet</label>
+                        <input type="text" id="empName" placeholder="John Doe">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nom d'utilisateur (identifiant)</label>
+                        <input type="text" id="empUsername" placeholder="johndoe">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mot de passe</label>
+                        <input type="text" id="empPassword" placeholder="Créer un mot de passe">
+                    </div>
+
+                    <button class="btn" onclick="addEmployee()">➕ Ajouter un employé</button>
+                    <div class="success-message" id="empSuccess">✅ Employé ajouté !</div>
+                </div>
+
+                <div class="card">
+                    <h2>📋 Liste des employés</h2>
+                    <div class="employees-grid" id="employeesList"></div>
+                </div>
+            </div>
+
+            <!-- ONGLET NOUVELLE DEMANDE -->
+            <div id="tab-newRequest" class="tab-content">
+                <div class="card">
+                    <h2>➕ Créer une nouvelle demande</h2>
+                    
+                    <div class="form-group">
+                        <label>Employé assigné</label>
+                        <select id="reqEmployee">
+                            <option value="">Sélectionner un employé</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Objet / Titre</label>
+                        <input type="text" id="reqTitle" placeholder="Miniature YouTube - Gaming">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description / Instructions</label>
+                        <textarea id="reqDescription" placeholder="Détails de la demande..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Prix (€)</label>
+                        <input type="number" id="reqPrice" placeholder="25" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Deadline</label>
+                        <input type="date" id="reqDeadline">
+                    </div>
+
+                    <button class="btn" onclick="createRequest()">📤 Créer la demande</button>
+                    <div class="success-message" id="reqSuccess">✅ Demande créée !</div>
+                </div>
+            </div>
+
+            <!-- ONGLET DEMANDES -->
+            <div id="tab-requests" class="tab-content">
+                <div class="card">
+                    <h2>📋 Toutes les demandes</h2>
+                    <div class="requests-list" id="requestsList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION
+        const ADMIN_PASSWORD = 'AsterMakerthe best';
+
+        // CONNEXION
+        document.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                showAdminPanel();
+            }
+
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const password = document.getElementById('passwordInput').value;
+                
+                if (password === ADMIN_PASSWORD) {
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    showAdminPanel();
+                } else {
+                    const errorMsg = document.getElementById('errorMessage');
+                    errorMsg.classList.add('show');
+                    document.getElementById('passwordInput').value = '';
+                    
+                    setTimeout(() => {
+                        errorMsg.classList.remove('show');
+                    }, 3000);
+                }
+            });
+        });
+
+        function showAdminPanel() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            loadEmployees();
+            loadRequests();
+            updateStats();
+            updateEmployeeSelect();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('adminLoggedIn');
+            location.reload();
+        }
+
+        // NAVIGATION
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // GESTION DES EMPLOYÉS
+        function addEmployee() {
+            const name = document.getElementById('empName').value;
+            const username = document.getElementById('empUsername').value;
+            const password = document.getElementById('empPassword').value;
+
+            if (!name || !username || !password) {
+                alert('Veuillez remplir tous les champs');
+                return;
+            }
+
+            const employees = JSON.parse(localStorage.getItem('aster_employees') || '[]');
+            
+            // Vérifier si l'username existe déjà
+            if (employees.find(emp => emp.username === username)) {
+                alert('Cet identifiant existe déjà');
+                return;
+            }
+
+            employees.push({
+                id: Date.now(),
+                name,
+                username,
+                password,
+                rating: 0,
+                notes: '',
+                createdAt: new Date().toISOString()
+            });
+
+            localStorage.setItem('aster_employees', JSON.stringify(employees));
+
+            document.getElementById('empName').value = '';
+            document.getElementById('empUsername').value = '';
+            document.getElementById('empPassword').value = '';
+
+            loadEmployees();
+            updateStats();
+            updateEmployeeSelect();
+            showMessage('empSuccess');
+        }
+
+        function loadEmployees() {
+            const employees = JSON.parse(localStorage.getItem('aster_employees') || '[]');
+            const container = document.getElementById('employeesList');
+
+            if (employees.length === 0) {
+                container.innerHTML = '<p style="color: #94a3b8; text-align: center; grid-column: 1/-1;">Aucun employé</p>';
+                return;
+            }
+
+            container.innerHTML = employees.map(emp => `
+                <div class="employee-card">
+                    <div class="employee-header">
+                        <div>
+                            <div class="employee-name">${emp.name}</div>
+                            <div class="employee-username">@${emp.username}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="rating-container">
+                        <div class="stars" data-employee-id="${emp.id}">
+                            ${[1, 2, 3, 4, 5].map(star => 
+                                `<span class="star ${star <= emp.rating ? 'active' : ''}" onclick="setRating(${emp.id}, ${star})">★</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <div class="employee-notes">
+                        <textarea placeholder="Notes sur l'employé..." id="notes-${emp.id}">${emp.notes || ''}</textarea>
+                    </div>
+
+                    <div class="employee-actions">
+                        <button class="btn btn-secondary btn-small" onclick="saveNotes(${emp.id})">💾 Sauvegarder notes</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteEmployee(${emp.id})">🗑️ Supprimer</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setRating(employeeId, rating) {
+            const employees = JSON.parse(localStorage.getItem('aster_employees') || '[]');
+            const employee = employees.find(emp => emp.id === employeeId);
+            
+            if (employee) {
+                employee.rating = rating;
+                localStorage.setItem('aster_employees', JSON.stringify(employees));
+                loadEmployees();
+            }
+        }
+
+        function saveNotes(employeeId) {
+            const employees = JSON.parse(localStorage.getItem('aster_employees') || '[]');
+            const employee = employees.find(emp => emp.id === employeeId);
+            
+            if (employee) {
+                employee.notes = document.getElementById(`notes-${employeeId}`).value;
+                localStorage.setItem('aster_employees', JSON.stringify(employees));
+                alert('✅ Notes sauvegardées');
+            }
+        }
+
+        function deleteEmployee(employeeId) {
+            if (!confirm('Supprimer cet employé ?')) return;
+
+            let employees = JSON.parse(localStorage.getItem('aster_employees') || '[]');
+            employees = employees.filter(emp => emp.id !== employeeId);
+            localStorage.setItem('aster_employees', JSON.stringify(employees));
+
+            loadEmployees();
+            updateStats();
+            updateEmployeeSelect();
+        }
+
+        function updateEmployeeSelect() {
+            const employees = JSON.parse(localStorage.getItem('aster_employees') || '[]');
+            const select = document.getElementById('reqEmployee');
+            
+            select.innerHTML = '<option value="">Sélectionner un employé</option>' +
+                employees.map(emp => `<option value="${emp.id}">${emp.name} (@${emp.username})</option>`).join('');
+        }
+
+        // GESTION DES DEMANDES
+        function createRequest() {
+            const employeeId = document.getElementById('reqEmployee').value;
+            const title = document.getElementById('reqTitle').value;
+            const description = document.getElementById('reqDescription').value;
+            const price = document.getElementById('reqPrice').value;
+            const deadline = document.getElementById('reqDeadline').value;
+
+            if (!employeeId || !title || !description || !price || !deadline) {
+                alert('Veuillez remplir tous les champs');
+                return;
+            }
+
+            const employees = JSON.parse(localStorage.getItem('aster_employees') || '[]');
+            const employee = employees.find(emp => emp.id === parseInt(employeeId));
+
+            const requests = JSON.parse(localStorage.getItem('aster_requests') || '[]');
+            
+            requests.push({
+                id: Date.now(),
+                employeeId: parseInt(employeeId),
+                employeeName: employee.name,
+                employeeUsername: employee.username,
+                title,
+                description,
+                price,
+                deadline,
+                isRead: false,
+                createdAt: new Date().toISOString()
+            });
+
+            localStorage.setItem('aster_requests', JSON.stringify(requests));
+
+            document.getElementById('reqEmployee').value = '';
+            document.getElementById('reqTitle').value = '';
+            document.getElementById('reqDescription').value = '';
+            document.getElementById('reqPrice').value = '';
+            document.getElementById('reqDeadline').value = '';
+
+            loadRequests();
+            updateStats();
+            showMessage('reqSuccess');
+        }
+
+        function loadRequests() {
+            const requests = JSON.parse(localStorage.getItem('aster_requests') || '[]');
+            const container = document.getElementById('requestsList');
+
+            if (requests.length === 0) {
+                container.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 40px;">Aucune demande</p>';
+                return;
+            }
+
+            requests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            container.innerHTML = requests.map(req => `
+                <div class="request-card ${req.isRead ? '' : 'unread'}">
+                    <div class="request-header">
+                        <div>
+                            <div class="request-title">${req.title}</div>
+                            <div class="request-employee">Assigné à: ${req.employeeName} (@${req.employeeUsername})</div>
+                        </div>
+                        <div class="request-status">
+                            <span class="badge ${req.isRead ? 'badge-read' : 'badge-unread'}">
+                                ${req.isRead ? '✓ Lue' : '● Non lue'}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="request-info">
+                        <div class="info-item">
+                            <div class="info-label">Prix</div>
+                            <div class="info-value">${req.price}€</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Deadline</div>
+                            <div class="info-value">${new Date(req.deadline).toLocaleDateString('fr-FR')}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Créée le</div>
+                            <div class="info-value">${new Date(req.createdAt).toLocaleDateString('fr-FR')}</div>
+                        </div>
+                    </div>
+
+                    <div class="request-description">${req.description}</div>
+
+                    <div class="request-actions">
+                        <button class="btn btn-danger btn-small" onclick="deleteRequest(${req.id})">🗑️ Supprimer</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteRequest(requestId) {
+            if (!confirm('Supprimer cette demande ?')) return;
+
+            let requests = JSON.parse(localStorage.getItem('aster_requests') || '[]');
+            requests = requests.filter(req => req.id !== requestId);
+            localStorage.setItem('aster_requests', JSON.stringify(requests));
+
+            loadRequests();
+            updateStats();
+        }
+
+        // STATISTIQUES
+        function updateStats() {
+            const employees = JSON.parse(localStorage.getItem('aster_employees') || '[]');
+            const requests = JSON.parse(localStorage.getItem('aster_requests') || '[]');
+            const unread = requests.filter(req => !req.isRead).length;
+
+            document.getElementById('statEmployees').textContent = employees.length;
+            document.getElementById('statRequests').textContent = requests.length;
+            document.getElementById('statUnread').textContent = unread;
+        }
+
+        // UTILITAIRES
+        function showMessage(id) {
+            const message = document.getElementById(id);
+            message.classList.add('show');
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

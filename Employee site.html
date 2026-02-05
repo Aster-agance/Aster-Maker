@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Employé - Aster Maker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 30%, #16213e 70%, #0f1419 100%);
+            color: #f0f4f8;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* PAGE DE CONNEXION */
+        #loginPage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(26, 11, 46, 0.6);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 25px;
+            padding: 50px 40px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .login-header p {
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #f0f4f8;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .login-input::placeholder {
+            color: rgba(203, 213, 225, 0.5);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #8a2be2, #d4af37);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(212, 175, 55, 0.6);
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.95rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        .lock-icon {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5));
+        }
+
+        /* EMPLOYEE PANEL */
+        #employeePanel {
+            display: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 50%, #d4af37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .header p {
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+
+        .logout-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 12px 24px;
+            background: rgba(239, 68, 68, 0.8);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background: rgba(239, 68, 68, 1);
+            transform: translateY(-2px);
+        }
+
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+
+        /* CARD */
+        .card {
+            background: rgba(26, 11, 46, 0.4);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h2 {
+            color: #d4af37;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* REQUESTS LIST */
+        .requests-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .request-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .request-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .request-card.unread {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .request-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #d4af37;
+            margin-bottom: 10px;
+        }
+
+        .request-status {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .badge-read {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .badge-unread {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .request-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.2rem;
+            color: #f0f4f8;
+            font-weight: 600;
+        }
+
+        .info-value.price {
+            color: #10b981;
+            font-size: 1.5rem;
+        }
+
+        .info-value.deadline {
+            color: #fbbf24;
+        }
+
+        .request-description {
+            color: #cbd5e1;
+            line-height: 1.8;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid #d4af37;
+            border-radius: 5px;
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #8a2be2, #d4af37);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.6);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .logout-button {
+                position: static;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .request-info {
+                grid-template-columns: 1fr;
+            }
+
+            .request-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- PAGE DE CONNEXION -->
+    <div id="loginPage">
+        <div class="login-container">
+            <div class="lock-icon">🎨</div>
+            <div class="login-header">
+                <h1>Espace Employé</h1>
+                <p>Aster Maker - Gestion des demandes</p>
+            </div>
+            <form class="login-form" id="loginForm">
+                <div>
+                    <input 
+                        type="text" 
+                        id="usernameInput" 
+                        class="login-input" 
+                        placeholder="Identifiant"
+                        autocomplete="username"
+                    >
+                </div>
+                <div>
+                    <input 
+                        type="password" 
+                        id="passwordInput" 
+                        class="login-input" 
+                        placeholder="Mot de passe"
+                        autocomplete="current-password"
+                    >
+                </div>
+                <button type="submit" class="login-button">Se connecter</button>
+                <div class="error-message" id="errorMessage">❌ Identifiant ou mot de passe incorrect</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- PANEL EMPLOYÉ -->
+    <div id="employeePanel">
+        <div class="container">
+            <div class="header">
+                <button class="logout-button" onclick="logout()">🚪 Déconnexion</button>
+                <h1 id="welcomeTitle">🎨 Mes demandes</h1>
+                <p id="welcomeSubtitle">Aster Maker</p>
+            </div>
+
+            <!-- STATISTIQUES -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="statTotal">0</div>
+                    <div class="stat-label">Demandes totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statUnread">0</div>
+                    <div class="stat-label">Non lues</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="statRead">0</div>
+                    <div class="stat-label">Lues</div>
+                </div>
+            </div>
+
+            <!-- DEMANDES -->
+            <div class="card">
+                <h2>📋 Mes demandes de miniatures</h2>
+                <div class="requests-list" id="requestsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentEmployee = null;
+
+        // CONNEXION
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedEmployee = sessionStorage.getItem('employeeLoggedIn');
+            if (savedEmployee) {
+                currentEmployee = JSON.parse(savedEmployee);
+                showEmployeePanel();
+            }
+
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const username = document.getElementById('usernameInput').value.trim();
+                const password = document.getElementById('passwordInput').value;
+                
+                const employees = JSON.parse(localStorage.getItem('aster_employees') || '[]');
+                const employee = employees.find(emp => 
+                    emp.username === username && emp.password === password
+                );
+
+                if (employee) {
+                    currentEmployee = employee;
+                    sessionStorage.setItem('employeeLoggedIn', JSON.stringify(employee));
+                    showEmployeePanel();
+                } else {
+                    const errorMsg = document.getElementById('errorMessage');
+                    errorMsg.classList.add('show');
+                    document.getElementById('passwordInput').value = '';
+                    
+                    setTimeout(() => {
+                        errorMsg.classList.remove('show');
+                    }, 3000);
+                }
+            });
+        });
+
+        function showEmployeePanel() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('employeePanel').style.display = 'block';
+            
+            document.getElementById('welcomeTitle').textContent = `👋 Bonjour ${currentEmployee.name}`;
+            document.getElementById('welcomeSubtitle').textContent = `@${currentEmployee.username} - Vos demandes Aster Maker`;
+            
+            loadMyRequests();
+            updateStats();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('employeeLoggedIn');
+            currentEmployee = null;
+            location.reload();
+        }
+
+        // CHARGEMENT DES DEMANDES
+        function loadMyRequests() {
+            const requests = JSON.parse(localStorage.getItem('aster_requests') || '[]');
+            const myRequests = requests.filter(req => req.employeeId === currentEmployee.id);
+            const container = document.getElementById('requestsList');
+
+            if (myRequests.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <h3>Aucune demande pour le moment</h3>
+                        <p>Vous n'avez pas encore de demandes assignées.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Trier par date (plus récentes en premier)
+            myRequests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            container.innerHTML = myRequests.map(req => {
+                const deadline = new Date(req.deadline);
+                const now = new Date();
+                const daysLeft = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
+                
+                let deadlineClass = '';
+                let deadlineText = '';
+                
+                if (daysLeft < 0) {
+                    deadlineClass = 'deadline-expired';
+                    deadlineText = `Expirée (${Math.abs(daysLeft)} jours)`;
+                } else if (daysLeft === 0) {
+                    deadlineText = "Aujourd'hui !";
+                } else if (daysLeft === 1) {
+                    deadlineText = "Demain";
+                } else if (daysLeft <= 3) {
+                    deadlineText = `Dans ${daysLeft} jours`;
+                } else {
+                    deadlineText = deadline.toLocaleDateString('fr-FR');
+                }
+
+                return `
+                    <div class="request-card ${req.isRead ? '' : 'unread'}">
+                        <div class="request-header">
+                            <div>
+                                <div class="request-title">${req.title}</div>
+                            </div>
+                            <div class="request-status">
+                                <span class="badge ${req.isRead ? 'badge-read' : 'badge-unread'}">
+                                    ${req.isRead ? '✓ Lue' : '● Nouvelle'}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="request-info">
+                            <div class="info-item">
+                                <div class="info-label">💰 Prix</div>
+                                <div class="info-value price">${req.price}€</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">⏰ Deadline</div>
+                                <div class="info-value deadline">${deadlineText}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">📅 Créée le</div>
+                                <div class="info-value">${new Date(req.createdAt).toLocaleDateString('fr-FR')}</div>
+                            </div>
+                        </div>
+
+                        <div class="request-description">
+                            <strong style="color: #d4af37; display: block; margin-bottom: 10px;">📝 Instructions :</strong>
+                            ${req.description}
+                        </div>
+
+                        <div class="request-actions">
+                            ${!req.isRead ? 
+                                `<button class="btn btn-success" onclick="markAsRead(${req.id})">✓ Marquer comme lue</button>` : 
+                                `<button class="btn" disabled>✓ Demande lue</button>`
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // MARQUER COMME LUE
+        function markAsRead(requestId) {
+            let requests = JSON.parse(localStorage.getItem('aster_requests') || '[]');
+            const request = requests.find(req => req.id === requestId);
+            
+            if (request) {
+                request.isRead = true;
+                localStorage.setItem('aster_requests', JSON.stringify(requests));
+                loadMyRequests();
+                updateStats();
+            }
+        }
+
+        // STATISTIQUES
+        function updateStats() {
+            const requests = JSON.parse(localStorage.getItem('aster_requests') || '[]');
+            const myRequests = requests.filter(req => req.employeeId === currentEmployee.id);
+            const unread = myRequests.filter(req => !req.isRead).length;
+            const read = myRequests.filter(req => req.isRead).length;
+
+            document.getElementById('statTotal').textContent = myRequests.length;
+            document.getElementById('statUnread').textContent = unread;
+            document.getElementById('statRead').textContent = read;
+        }
+    </script>
+</body>
+</html>
